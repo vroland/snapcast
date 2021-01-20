@@ -13,6 +13,9 @@ set(SERVER_SOURCES
     encoder/encoder_factory.cpp
     encoder/pcm_encoder.cpp
     encoder/null_encoder.cpp
+    metareader/mpd.cpp
+    metareader/scraper/http_client.cpp
+    metareader/scraper/musicbrainz.cpp
     streamreader/base64.cpp
     streamreader/stream_uri.cpp
     streamreader/stream_manager.cpp

@@ -1,6 +1,6 @@
 /***
     This file is part of snapcast
-    Copyright (C) 2014-2020  Johannes Pohl
+    Copyright (C) 2014-2021  Johannes Pohl
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,10 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef STRING_UTILS_H
-#define STRING_UTILS_H
+#ifndef STRING_UTILS_HPP
+#define STRING_UTILS_HPP
 
 #include <algorithm>
+#include <iomanip>
 #include <map>
 #include <sstream>
 #include <stdio.h>
@@ -169,6 +170,32 @@ static std::map<std::string, std::string> split_pairs(const std::string& s, char
     for (auto& pair : pairs)
         result[pair.first] = *pair.second.begin();
     return result;
+}
+
+static std::string url_encode(const std::string& value)
+{
+    std::ostringstream escaped;
+    escaped.fill('0');
+    escaped << std::hex;
+
+    for (std::string::const_iterator i = value.begin(), n = value.end(); i != n; ++i)
+    {
+        std::string::value_type c = (*i);
+
+        // Keep alphanumeric and other accepted characters intact
+        if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~')
+        {
+            escaped << c;
+            continue;
+        }
+
+        // Any other characters are percent-encoded
+        escaped << std::uppercase;
+        escaped << '%' << std::setw(2) << int((unsigned char)c);
+        escaped << std::nouppercase;
+    }
+
+    return escaped.str();
 }
 
 

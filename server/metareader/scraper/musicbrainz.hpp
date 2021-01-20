@@ -16,36 +16,34 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef PIPE_STREAM_HPP
-#define PIPE_STREAM_HPP
+#ifndef MUSICBRAINZ_HPP
+#define MUSICBRAINZ_HPP
 
-#include "metareader/mpd.hpp"
-#include "posix_stream.hpp"
+#include "http_client.hpp"
+#include <boost/asio.hpp>
 
-namespace streamreader
+
+namespace metareader
+{
+namespace scraper
 {
 
-using boost::asio::posix::stream_descriptor;
 
-
-/// Reads and decodes PCM data from a named pipe
-/**
- * Reads PCM from a named pipe and passes the data to an encoder.
- * Implements EncoderListener to get the encoded data.
- * Data is passed to the PcmListener
- */
-class PipeStream : public PosixStream
+class Musicbrainz
 {
 public:
-    /// ctor. Encoded PCM data is passed to the PipeListener
-    PipeStream(PcmListener* pcmListener, boost::asio::io_context& ioc, const StreamUri& uri);
+    Musicbrainz(boost::asio::io_context& ioc);
+    void scrape(const std::string& title, const std::string& artist, const std::string& album = "");
 
-protected:
-    void do_connect() override;
+private:
+    void scrapeCover(const std::string& mbid); //, HttpClient::HttpResponseHandler handler);
+    void onScrape(beast::error_code ec, const http::response<http::vector_body<char>>& response);
+    void onScrapeCover(beast::error_code ec, const http::response<http::vector_body<char>>& response);
 
-    metareader::Mpd mpd;
+    HttpClient http_;
 };
 
-} // namespace streamreader
+} // namespace scraper
+} // namespace metareader
 
 #endif

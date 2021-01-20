@@ -379,6 +379,12 @@ int main(int argc, char** argv)
                      << " \"fragments=<number of buffers>\" - default 4, min 2\n";
             }
 #endif
+#if defined(HAS_OBOE) || defined(HAS_OPENSL)
+            else if ((settings.player.player_name == player::OBOE) || (settings.player.player_name == player::OPENSL))
+            {
+                cout << "TODO: performance mode\n";
+            }
+#endif
             else
             {
                 cout << "No options available for \"" << settings.player.player_name << "\n";
