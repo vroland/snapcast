@@ -40,7 +40,11 @@ private:
     void onScrape(beast::error_code ec, const http::response<http::vector_body<char>>& response);
     void onScrapeCover(beast::error_code ec, const http::response<http::vector_body<char>>& response);
 
+    /// the HTTP client
     HttpClient http_;
+
+    /// cache the last query to avoid duplicate scrapes 
+    std::string last_query_;
 };
 
 } // namespace scraper

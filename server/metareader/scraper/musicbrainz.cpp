@@ -45,6 +45,9 @@ void Musicbrainz::scrape(const std::string& title, const std::string& artist, co
     query << url_encode(title);
     if (!artist.empty())
         query << url_encode(" AND ") << "artist:" << url_encode(artist);
+    if (last_query_ == query.str())
+        return;
+    last_query_ = query.str();
     LOG(INFO, LOG_TAG) << "Query: " << query.str() << "\n";
     const string host = "musicbrainz.org";
     const string target = "/ws/2/release-group/?query=" + query.str() + "&fmt=json&limit=1";
