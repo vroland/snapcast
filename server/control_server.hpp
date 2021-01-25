@@ -1,6 +1,6 @@
 /***
     This file is part of snapcast
-    Copyright (C) 2014-2020  Johannes Pohl
+    Copyright (C) 2014-2021  Johannes Pohl
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ***/
 
-#ifndef CONTROL_SERVER_H
-#define CONTROL_SERVER_H
+#ifndef CONTROL_SERVER_HPP
+#define CONTROL_SERVER_HPP
 
 #include <boost/asio.hpp>
 #include <memory>
@@ -25,7 +25,7 @@
 #include <set>
 #include <vector>
 
-#include "common/queue.h"
+#include "common/queue.hpp"
 #include "common/sample_format.hpp"
 #include "control_session.hpp"
 #include "message/codec_header.hpp"

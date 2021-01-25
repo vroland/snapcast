@@ -26,7 +26,7 @@
 #include <sstream>
 #include <vector>
 
-#include "common/queue.h"
+#include "common/queue.hpp"
 #include "common/sample_format.hpp"
 #include "control_server.hpp"
 #include "jsonrpcpp.hpp"

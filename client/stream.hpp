@@ -19,7 +19,7 @@
 #ifndef STREAM_HPP
 #define STREAM_HPP
 
-#include "common/queue.h"
+#include "common/queue.hpp"
 #include "common/sample_format.hpp"
 #include "double_buffer.hpp"
 #include "message/message.hpp"
