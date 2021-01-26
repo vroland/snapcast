@@ -43,7 +43,7 @@ private:
     /// the HTTP client
     HttpClient http_;
 
-    /// cache the last query to avoid duplicate scrapes 
+    /// cache the last query to avoid duplicate scrapes
     std::string last_query_;
 };
 

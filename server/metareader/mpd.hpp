@@ -20,6 +20,7 @@
 #define MPD_HPP
 
 #include "common/aixlog.hpp"
+#include "common/metatags.hpp"
 #include "scraper/musicbrainz.hpp"
 
 #include <boost/asio.hpp>
