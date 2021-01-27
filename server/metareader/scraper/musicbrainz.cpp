@@ -68,24 +68,35 @@ void Musicbrainz::onScrape(beast::error_code ec, const http::response<http::vect
 {
     if (ec)
     {
-        LOG(ERROR, LOG_TAG) << "Error: " << ec.message() << "\n";
+        LOG(ERROR, LOG_TAG) << "ScrapeMeta error: " << ec.message() << "\n";
+    }
+    else if (response.result() != beast::http::status::ok)
+    {
+        LOG(ERROR, LOG_TAG) << "ScrapeMeta response: " << response.result_int() << ", reason: " << response.reason() << "\n";
     }
     else
     {
-        // LOG(ERROR, LOG_TAG) << "Response: " << payload.data() << "\n";
-        nlohmann::json j = nlohmann::json::parse(response.body());
-
-        // Write the message to standard out
-        // std::cout << j.dump(3) << std::endl;
-        auto release_groups = j["release-groups"];
-        if (release_groups.is_array() && !release_groups.empty())
+        try
         {
-            auto releases = release_groups.front()["releases"];
-            if (releases.is_array() && !releases.empty())
+            nlohmann::json j = nlohmann::json::parse(response.body());
+
+            // Write the message to standard out
+            // std::cout << j.dump(3) << std::endl;
+            auto release_groups = j["release-groups"];
+            if (release_groups.is_array() && !release_groups.empty())
             {
-                scrapeCover(releases[0]["id"].get<std::string>());
-                // [this](beast::error_code ec, const http::response<http::vector_body<char>>& response) { onScrapeCover(ec, response); });
+                auto releases = release_groups.front()["releases"];
+                if (releases.is_array() && !releases.empty())
+                {
+                    scrapeCover(releases[0]["id"].get<std::string>());
+                    // [this](beast::error_code ec, const http::response<http::vector_body<char>>& response) { onScrapeCover(ec, response); });
+                }
             }
+        }
+        catch (const std::exception& e)
+        {
+            LOG(ERROR, LOG_TAG) << "ScrapeMeta exception: " << e.what() << "\n";
+            LOG(INFO, LOG_TAG) << "Response: " << response << "\n";
         }
     }
 }
@@ -96,15 +107,15 @@ void Musicbrainz::onScrapeCover(beast::error_code ec, const http::response<http:
     {
         LOG(ERROR, LOG_TAG) << "ScrapeCover Error: " << ec.message() << "\n";
     }
+    else if (response.result() != beast::http::status::ok)
+    {
+        LOG(ERROR, LOG_TAG) << "ScrapeCover response: " << response.result_int() << ", reason: " << response.reason() << "\n";
+    }
     else
     {
-        LOG(INFO, LOG_TAG) << "ScrapeCover Result: " << response.result_int() << "\n";
-        if (response.result() == beast::http::status::ok)
-        {
-            LOG(INFO, LOG_TAG) << "Cover: " << response.body().size() << "\n";
-            std::ofstream fout("cover.jpg", ios::out | ios::binary);
-            fout.write(response.body().data(), response.body().size());
-        }
+        LOG(INFO, LOG_TAG) << "Cover: " << response.body().size() << "\n";
+        std::ofstream fout("cover.jpg", ios::out | ios::binary);
+        fout.write(response.body().data(), response.body().size());
     }
 }
 
