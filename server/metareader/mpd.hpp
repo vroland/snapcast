@@ -40,14 +40,22 @@ class Mpd
         std::string command;
         std::vector<std::string> message;
 
-        std::string get(const std::string& key) const
+        boost::optional<std::string> get(const std::string& key) const
         {
+            auto toLower = [](const std::string& s) {
+                std::string result = s;
+                std::transform(result.begin(), result.end(), result.begin(), [](unsigned char c) { return std::tolower(c); });
+                return result;
+            };
+
+            std::string lower_key = toLower(key);
             for (const auto& s : message)
             {
-                if (s.find(key + ": ") == 0)
+
+                if (toLower(s).find(lower_key + ": ") == 0)
                     return s.substr(key.size() + 2);
             }
-            return "";
+            return boost::none;
         }
     };
 

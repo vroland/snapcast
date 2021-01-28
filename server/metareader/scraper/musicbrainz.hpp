@@ -19,6 +19,7 @@
 #ifndef MUSICBRAINZ_HPP
 #define MUSICBRAINZ_HPP
 
+#include "common/metatags.hpp"
 #include "http_client.hpp"
 #include <boost/asio.hpp>
 
@@ -33,7 +34,7 @@ class Musicbrainz
 {
 public:
     Musicbrainz(boost::asio::io_context& ioc);
-    void scrape(const std::string& title, const std::string& artist, const std::string& album = "");
+    void scrape(const Metatags& tags);
 
 private:
     void scrapeCover(const std::string& mbid); //, HttpClient::HttpResponseHandler handler);

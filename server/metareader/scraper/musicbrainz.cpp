@@ -37,14 +37,18 @@ Musicbrainz::Musicbrainz(boost::asio::io_context& ioc) : http_(ioc)
     LOG(DEBUG, LOG_TAG) << "Musicbrainz\n";
 }
 
-void Musicbrainz::scrape(const std::string& title, const std::string& artist, const std::string& album)
+void Musicbrainz::scrape(const Metatags& tags)
 {
-    std::ignore = album;
+    if (tags.musicbrainz_albumid.has_value())
+    {
+        scrapeCover(tags.musicbrainz_albumid.value());
+        return;
+    }
     std::stringstream query;
     using utils::string::url_encode;
-    query << url_encode(title);
-    if (!artist.empty())
-        query << url_encode(" AND ") << "artist:" << url_encode(artist);
+    query << url_encode(tags.title.value_or(""));
+    if (tags.artist.has_value())
+        query << url_encode(" AND ") << "artist:" << url_encode(tags.artist.value());
     if (last_query_ == query.str())
         return;
     last_query_ = query.str();

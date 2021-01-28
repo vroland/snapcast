@@ -132,10 +132,43 @@ void Mpd::readMeta()
                 }
                 else
                 {
-                    auto artist = response.get("Artist");
-                    auto title = response.get("Title");
+                    Metatags tags;
+                    tags.file = response.get("file");
+                    auto duration = response.get("duration");
+                    if (duration.has_value())
+                        tags.duration = cpt::stod(duration.value());
+                    tags.artist = response.get("artist");
+                    tags.artistsort = response.get("artistsort");
+                    tags.album = response.get("album");
+                    tags.albumsort = response.get("albumsort");
+                    tags.albumartist = response.get("albumartist");
+                    tags.albumartistsort = response.get("albumartistsort");
+                    tags.title = response.get("title");
+                    auto track = response.get("track");
+                    if (track.has_value())
+                        tags.track = cpt::stoi(track.value());
+                    tags.name = response.get("name");
+                    tags.genre = response.get("genre");
+                    tags.date = response.get("date");
+                    tags.originaldate = response.get("originaldate");
+                    tags.composer = response.get("composer");
+                    tags.performer = response.get("performer");
+                    tags.conductor = response.get("");
+                    tags.work = response.get("conductor");
+                    tags.grouping = response.get("grouping");
+                    tags.comment = response.get("comment");
+                    auto disc = response.get("disc");
+                    if (disc.has_value())
+                        tags.disc = cpt::stoi(disc.value());
+                    tags.label = response.get("label");
+                    tags.musicbrainz_artistid = response.get("musicbrainz_artistid");
+                    tags.musicbrainz_albumid = response.get("musicbrainz_albumid");
+                    tags.musicbrainz_albumartistid = response.get("musicbrainz_albumartistid");
+                    tags.musicbrainz_trackid = response.get("musicbrainz_trackid");
+                    tags.musicbrainz_releasetrackid = response.get("musicbrainz_releasetrackid");
+                    tags.musicbrainz_workid = response.get("musicbrainz_workid");
 
-                    scraper_.scrape(title, artist);
+                    scraper_.scrape(tags);
 
                     logResponse(response, AixLog::Severity::info);
                     sendCommand("status", [this](const boost::system::error_code& ec, const Response& response) {
@@ -185,7 +218,7 @@ void Mpd::getResponse(const std::string& command, ReceiveHandler handler)
         }
         else
         {
-            std::string str(boost::asio::buffers_begin(streambuf_.data()), boost::asio::buffers_begin(streambuf_.data()) + length);
+            std::string str(boost::asio::buffers_begin(streambuf_.data()), boost::asio::buffers_begin(streambuf_.data()) + length - 1);
             LOG(DEBUG, LOG_TAG) << "Read: " << str << "\n";
             response.message.push_back(std::move(str));
             streambuf_.consume(length);

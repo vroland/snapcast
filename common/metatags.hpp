@@ -25,6 +25,10 @@
 
 struct Metatags
 {
+    /// the song file.
+    boost::optional<std::string> file;
+    /// the duration of the song
+    boost::optional<float> duration;
     /// the artist name. Its meaning is not well-defined; see “composer” and “performer” for more specific tags.
     boost::optional<std::string> artist;
     /// same as artist, but for sorting. This usually omits prefixes such as “The”.
