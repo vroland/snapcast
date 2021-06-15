@@ -105,7 +105,7 @@ if (ANDROID)
     target_link_libraries(libsnapclient.so ${CLIENT_LIBRARIES} log OpenSLES)
 else()
     add_executable(snapclient ${CLIENT_SOURCES})
-    target_link_libraries(snapclient ${CLIENT_LIBRARIES})
+    target_link_libraries(snapclient ${CLIENT_LIBRARIES} -static-libgcc -static-libstdc++)
 
     install(TARGETS snapclient COMPONENT client DESTINATION "${CMAKE_INSTALL_BINDIR}")
     install(FILES snapclient.1 COMPONENT client DESTINATION "${CMAKE_INSTALL_MANDIR}/man1")
